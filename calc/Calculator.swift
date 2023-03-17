@@ -58,9 +58,9 @@ class Calculator {
                 result = add(no1: result, no2: number)
             case "-":
                 result = minus(no1: result, no2: number)
-//            case "*":
-//            case "/":
-//            case "%":
+            case "*":
+            case "/":
+            case "%":
             default:
                 print("String error")
                 fatalError()
