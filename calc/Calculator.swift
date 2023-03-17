@@ -59,8 +59,11 @@ class Calculator {
             case "-":
                 result = minus(no1: result, no2: number)
             case "*":
+                result = multiply(no1: result, no2: number)
             case "/":
+                result = Int(divide(no1: result, no2: number))
             case "%":
+                result = modulo(no1: result, no2: number)
             default:
                 print("String error")
                 fatalError()
