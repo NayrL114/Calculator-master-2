@@ -50,6 +50,12 @@ class Calculator {
         return no1 % no2
     }
     
+    ///
+    /// TO DO ! :
+    ///  FIND WAYS TO FIX THE PRECEDENCE LOOP.
+    ///  FIND WAYS TO INCORPORATE THE COPIED INPUT ARRAY INTO THE LOOP
+    ///  MAYBE DO A NEW FOR LOOP TO CONVERT EVERY NUMBER IN INPUTS ARRAY INTO NUMBERS
+    
     func calculate(args: [String]) -> String {
         // Todo: Calculate Result from the arguments. Replace dummyResult with your actual result;
         //let dummyResult = add(no1: 1, no2: 2);
@@ -64,6 +70,7 @@ class Calculator {
         var precedence: Int = 3; /// unused. precedence level indicater.
         ///
         var result = Int(args[0])!// unwarpping the args[0]?
+        //var result = Int(inputs[0])!
         
         for precedence in stride(from: 3, to: 1, by: -1){
             print("At precedence level \(precedence) the result is \(result)")
@@ -75,32 +82,32 @@ class Calculator {
                 case 3:
                     switch op{
                     case "*":
-                        result = multiply(no1: result, no2: number)
-                        inputs.remove(at: index-1)
-                        inputs.remove(at: index-1)
+                        result = Int(multiply(no1: result, no2: number))
+//                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
                     case "/":
                         result = Int(divide(no1: result, no2: number))
-                        inputs.remove(at: index-1)
-                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
                         //print(inputs)
                     case "%":
                         result = modulo(no1: result, no2: number)
-                        inputs.remove(at: index-1)
-                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
                     default:
                         print("No precedence 3 calculation detected. ")
-                        //fatalError()
+                        //fatalError() // might need to throw a input string error here
                     }
                 case 2:
                     switch op{
                     case "+":
                         result = add(no1: result, no2: number)
-                        inputs.remove(at: index-1)
-                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
                     case "-":
                         result = minus(no1: result, no2: number)
-                        inputs.remove(at: index-1)
-                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
+//                        inputs.remove(at: index-1)
                     default:
                         print("No precedence 2 calculation detected. ")
                         //fatalError()
