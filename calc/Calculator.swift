@@ -24,6 +24,7 @@ class Calculator {
     /// - Warning: The result may yield Int overflow.
     /// - SeeAlso: https://developer.apple.com/documentation/swift/int/2884663-addingreportingoverflow
     
+    /// Reusable calculation functions
     func add(no1: Int, no2: Int) -> Int {
         return no1 + no2;
     }
