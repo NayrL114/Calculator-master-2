@@ -64,6 +64,8 @@ class Calculator {
         // Todo: Calculate Result from the arguments. Replace dummyResult with your actual result;
         //let dummyResult = add(no1: 1, no2: 2);
         
+        // This function will process the input to get ready for calculationProcess running.
+        
         guard (args.count >= 3) else{
             //return("error, input is not long enough")
             return String(Int(args[0])!)// Parse the integer of single input back to the tester
@@ -76,6 +78,7 @@ class Calculator {
         inputNumbers = Array(repeating: 0, count: args.count)
         inputOperators = Array(repeating: "", count: args.count)
         
+        // Extracting inputs as seperated numbers and operators, into an global editable array.
         for x in stride(from: 0, to: args.count, by: 2){
             inputNumbers[x] = Int(args[x])!
         }
@@ -86,6 +89,7 @@ class Calculator {
         }
         //print(inputOperators)
         
+        // Pass the pointer and precedence level (default at 3) into calculateProcess function
         return String(calculateProcess(pointer: 0, precedence: 3))
         
     }
@@ -97,6 +101,7 @@ class Calculator {
             return inputNumbers[0]
         }
         
+        // Save an editable copy of pointer and precedence indicator
         var updatePointer: Int = pointer; // iterater pointer
         var updatePrecedence: Int = precedence
         //var precedence: Int = 3; // unused. precedence level indicater.
@@ -125,13 +130,16 @@ class Calculator {
 //            inputOperators.remove(at: updatePointer + 1)
 //            print(inputNumbers)
 //            print(inputOperators)
+            
+            // Initial loop complete, a higher precedence level calculation should be completed,
+            // Returning to starting point to scan for a lower level precedence calculation.
             updatePointer = 0
             updatePrecedence = updatePrecedence - 1
         }
         else{
             let op = inputOperators[updatePointer + 1]
-            switch updatePrecedence{
-            case 3:
+            switch updatePrecedence{// determine the calculation process based on the precedence level
+            case 3:// precedence level 3 would be multiply, divide, and modulo. x, /, %
                 switch op{
                 case "x":
                     inputNumbers[updatePointer] = Int(multiply(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
@@ -158,7 +166,7 @@ class Calculator {
                     //print("This is + or -, skipping this step")
                     updatePointer = updatePointer + 2
                 }
-            case 2:
+            case 2:// precedence level 2 would be add and subtraction. +, -
                 switch op{
                 case "+":
                     inputNumbers[updatePointer] = Int(add(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
@@ -179,13 +187,13 @@ class Calculator {
                     updatePointer = updatePointer + 2
                 }
             default:
-                print("Finalising calculation")
-            }
+                print("Finalising calculation")// most likely this line would not be printed. this is part of switch precedence loop.
+            }// end of switch precedence loop/ 
             
             //print(inputNumbers)
             //print(inputOperators)
             //print("After checking, now pointer is reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
-        }
+        }// end of else loop
         
         calculateProcess(pointer: updatePointer, precedence: updatePrecedence)
         return inputNumbers[0]
