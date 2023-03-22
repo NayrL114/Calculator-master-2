@@ -133,7 +133,7 @@ class Calculator {
             switch updatePrecedence{
             case 3:
                 switch op{
-                case "*":
+                case "x":
                     inputNumbers[updatePointer] = Int(multiply(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
                     inputNumbers.remove(at: updatePointer + 2)
