@@ -59,6 +59,8 @@ class Calculator {
     func calculate(args: [String]) -> String {
         // Todo: Calculate Result from the arguments. Replace dummyResult with your actual result;
         //let dummyResult = add(no1: 1, no2: 2);
+        
+        // for x in range(0, len(inputs), 2)
 
         guard (args.count >= 3) else{
             return("error, input is not long enough")
