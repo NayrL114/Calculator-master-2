@@ -65,7 +65,8 @@ class Calculator {
         //let dummyResult = add(no1: 1, no2: 2);
         
         guard (args.count >= 3) else{
-            return("error, input is not long enough")
+            //return("error, input is not long enough")
+            return String(Int(args[0])!)// Parse the integer of single input back to the tester
             // this should throw an error to be catched by the program
         }
         
@@ -85,11 +86,11 @@ class Calculator {
         }
         //print(inputOperators)
         
-        return String(calculateProcess(pointer: 0))
+        return String(calculateProcess(pointer: 0, precedence: 3))
         
     }
 
-    func calculateProcess(pointer: Int) -> Int{
+    func calculateProcess(pointer: Int, precedence: Int) -> Int{
         //var inputs = args
         
         guard (inputNumbers.count >= 3 && inputOperators.count >= 3) else{
@@ -97,66 +98,97 @@ class Calculator {
         }
         
         var updatePointer: Int = pointer; // iterater pointer
+        var updatePrecedence: Int = precedence
         //var precedence: Int = 3; // unused. precedence level indicater.
         //
         //var result = Int(args[0])!// unwarpping the args[0]?
         //var result = Int(inputs[0])!
         
         if (inputNumbers[updatePointer] == inputNumbers[inputNumbers.count - 1]){
-            updatePointer = updatePointer - 2
-            //print("Right now pointer is reverse reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
-            let op = inputOperators[updatePointer + 1]
-            switch op{
-            case "+":
-                inputNumbers[updatePointer] = Int(add(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
-                //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-            case "-":
-                inputNumbers[updatePointer] = Int(minus(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
-                //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-            default:
-                print("This is %/*, skipping this step")
-            }
-            //print("After reverse checking, now pointer is reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
-            inputNumbers.remove(at: updatePointer + 2)
-            inputNumbers.remove(at: updatePointer + 1)
-            inputOperators.remove(at: updatePointer + 2)
-            inputOperators.remove(at: updatePointer + 1)
-            //print(inputNumbers)
-            //print(inputOperators)
+//            updatePointer = updatePointer - 2
+//            print("Right now pointer is reverse reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
+//            let op = inputOperators[updatePointer + 1]
+//            switch op{
+//            case "+":
+//                inputNumbers[updatePointer] = Int(add(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+//                print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
+//            case "-":
+//                inputNumbers[updatePointer] = Int(minus(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+//                print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
+//            default:
+//                print("This is %/*, skipping this step")
+//            }
+//            //print("After reverse checking, now pointer is reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
+//            inputNumbers.remove(at: updatePointer + 2)
+//            inputNumbers.remove(at: updatePointer + 1)
+//            inputOperators.remove(at: updatePointer + 2)
+//            inputOperators.remove(at: updatePointer + 1)
+//            print(inputNumbers)
+//            print(inputOperators)
+            updatePointer = 0
+            updatePrecedence = updatePrecedence - 1
         }
         else{
             let op = inputOperators[updatePointer + 1]
-            switch op{
-            case "*":
-                inputNumbers[updatePointer] = Int(multiply(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
-                //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                inputNumbers.remove(at: updatePointer + 2)
-                inputNumbers.remove(at: updatePointer + 1)
-                inputOperators.remove(at: updatePointer + 2)
-                inputOperators.remove(at: updatePointer + 1)
-            case "/":
-                inputNumbers[updatePointer] = Int(divide(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
-                //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                inputNumbers.remove(at: updatePointer + 2)
-                inputNumbers.remove(at: updatePointer + 1)
-                inputOperators.remove(at: updatePointer + 2)
-                inputOperators.remove(at: updatePointer + 1)
-            case "%":
-                inputNumbers[updatePointer] = Int(modulo(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
-                //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                inputNumbers.remove(at: updatePointer + 2)
-                inputNumbers.remove(at: updatePointer + 1)
-                inputOperators.remove(at: updatePointer + 2)
-                inputOperators.remove(at: updatePointer + 1)
+            switch updatePrecedence{
+            case 3:
+                switch op{
+                case "*":
+                    inputNumbers[updatePointer] = Int(multiply(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
+                    inputNumbers.remove(at: updatePointer + 2)
+                    inputNumbers.remove(at: updatePointer + 1)
+                    inputOperators.remove(at: updatePointer + 2)
+                    inputOperators.remove(at: updatePointer + 1)
+                case "/":
+                    inputNumbers[updatePointer] = Int(divide(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
+                    inputNumbers.remove(at: updatePointer + 2)
+                    inputNumbers.remove(at: updatePointer + 1)
+                    inputOperators.remove(at: updatePointer + 2)
+                    inputOperators.remove(at: updatePointer + 1)
+                case "%":
+                    inputNumbers[updatePointer] = Int(modulo(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
+                    inputNumbers.remove(at: updatePointer + 2)
+                    inputNumbers.remove(at: updatePointer + 1)
+                    inputOperators.remove(at: updatePointer + 2)
+                    inputOperators.remove(at: updatePointer + 1)
+                default:
+                    //print("This is + or -, skipping this step")
+                    updatePointer = updatePointer + 2
+                }
+            case 2:
+                switch op{
+                case "+":
+                    inputNumbers[updatePointer] = Int(add(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
+                    inputNumbers.remove(at: updatePointer + 2)
+                    inputNumbers.remove(at: updatePointer + 1)
+                    inputOperators.remove(at: updatePointer + 2)
+                    inputOperators.remove(at: updatePointer + 1)
+                case "-":
+                    inputNumbers[updatePointer] = Int(minus(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
+                    inputNumbers.remove(at: updatePointer + 2)
+                    inputNumbers.remove(at: updatePointer + 1)
+                    inputOperators.remove(at: updatePointer + 2)
+                    inputOperators.remove(at: updatePointer + 1)
+                default:
+                    //print("This is *, % or /, skipping this step")
+                    updatePointer = updatePointer + 2
+                }
             default:
-                //print("This is + or -, skipping this step")
-                updatePointer = updatePointer + 2
+                print("Finalising calculation")
             }
+            
             //print(inputNumbers)
             //print(inputOperators)
             //print("After checking, now pointer is reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
         }
         
+        calculateProcess(pointer: updatePointer, precedence: updatePrecedence)
+        return inputNumbers[0]
         
 //
 //        for precedence in stride(from: 3, to: 1, by: -1){
@@ -210,8 +242,7 @@ class Calculator {
         //let resultString = String(result);
         //return(resultString)
         
-        calculateProcess(pointer: updatePointer)
-        return inputNumbers[0]
+        
         
     }
 }
