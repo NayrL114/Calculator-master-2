@@ -18,9 +18,17 @@ args.removeFirst() // remove the name of the program
 
 // Initialize a Calculator object
 let calculator = Calculator();
+var result: String = ""
 
 // Calculate the result
 //let result = calculator.add(no1: 1, no2: 1);
-let result = calculator.calculate(args: args)
+do{
+    result = try calculator.calculate(args: args)
+} catch CustomError.divisionByZero {
+    print("Error in main, division by zero")
+} catch {
+    print("Unexpected error: \(error)")
+}
+//let result = calculator.calculate(args: args)
 
 print(result)

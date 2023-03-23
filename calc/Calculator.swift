@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum CustomError: Error {
+    case invalidInput
+    case divisionByZero
+}
+
 class Calculator {
     
     /// For multi-step calculation, it's helpful to persist existing result
@@ -42,10 +47,11 @@ class Calculator {
         return no1 * no2
     }
     
-    func divide(no1: Int, no2: Int) -> Int{
+    func divide(no1: Int, no2: Int) throws -> Int{
         guard (no2 != 0) else {
-            print("error, division by zero")
-            return 0
+            //rint("error, division by zero")
+            //return 0
+            throw CustomError.divisionByZero
         }
         return no1 / no2
     }
@@ -60,7 +66,7 @@ class Calculator {
     ///  FIND WAYS TO INCORPORATE THE COPIED INPUT ARRAY INTO THE LOOP
     ///  MAYBE DO A NEW FOR LOOP TO CONVERT EVERY NUMBER IN INPUTS ARRAY INTO NUMBERS
     
-    func calculate(args: [String]) -> String {
+    func calculate(args: [String]) throws -> String {
         // Todo: Calculate Result from the arguments. Replace dummyResult with your actual result;
         //let dummyResult = add(no1: 1, no2: 2);
         
@@ -68,8 +74,17 @@ class Calculator {
         
         guard (args.count >= 3) else{
             //return("error, input is not long enough")
-            return String(Int(args[0])!)// Parse the integer of single input back to the tester
+//            do{
+//                return String(Int(args[0])!)// Parse the integer of single input back to the tester
+//            } catch CustomError.invalidInput {
+//
+//            }
+            if (args.count == 1){
+                return String(Int(args[0])!)// Parse the integer of single input back to the tester
+            }
+            //return String(Int(args[0])!)// Parse the integer of single input back to the tester
             // this should throw an error to be catched by the program
+            throw CustomError.invalidInput
         }
         
         // pulling numbers out from input args
@@ -90,11 +105,18 @@ class Calculator {
         //print(inputOperators)
         
         // Pass the pointer and precedence level (default at 3) into calculateProcess function
-        return String(calculateProcess(pointer: 0, precedence: 3))
+//        do {
+//            return String(try calculateProcess(pointer: 0, precedence: 3))
+//        } catch CustomError.invalidInput {
+//            print("Error in conversion block, invalid input")
+//        } catch CustomError.divisionByZero {
+//            print("Error in conversion block, division by zero")
+//        }
+        return String(try calculateProcess(pointer: 0, precedence: 3))
         
     }
 
-    func calculateProcess(pointer: Int, precedence: Int) -> Int{
+    func calculateProcess(pointer: Int, precedence: Int) throws -> Int{
         //var inputs = args
         
         guard (inputNumbers.count >= 3 && inputOperators.count >= 3) else{
@@ -109,28 +131,7 @@ class Calculator {
         //var result = Int(args[0])!// unwarpping the args[0]?
         //var result = Int(inputs[0])!
         
-        if (inputNumbers[updatePointer] == inputNumbers[inputNumbers.count - 1]){
-//            updatePointer = updatePointer - 2
-//            print("Right now pointer is reverse reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
-//            let op = inputOperators[updatePointer + 1]
-//            switch op{
-//            case "+":
-//                inputNumbers[updatePointer] = Int(add(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
-//                print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-//            case "-":
-//                inputNumbers[updatePointer] = Int(minus(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
-//                print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-//            default:
-//                print("This is %/*, skipping this step")
-//            }
-//            //print("After reverse checking, now pointer is reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
-//            inputNumbers.remove(at: updatePointer + 2)
-//            inputNumbers.remove(at: updatePointer + 1)
-//            inputOperators.remove(at: updatePointer + 2)
-//            inputOperators.remove(at: updatePointer + 1)
-//            print(inputNumbers)
-//            print(inputOperators)
-            
+        if (inputNumbers[updatePointer] == inputNumbers[inputNumbers.count - 1] && updatePointer == inputNumbers.count - 1){
             // Initial loop complete, a higher precedence level calculation should be completed,
             // Returning to starting point to scan for a lower level precedence calculation.
             updatePointer = 0
@@ -143,25 +144,35 @@ class Calculator {
                 switch op{
                 case "x":
                     inputNumbers[updatePointer] = Int(multiply(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                    inputNumbers.remove(at: updatePointer + 2)
-                    inputNumbers.remove(at: updatePointer + 1)
-                    inputOperators.remove(at: updatePointer + 2)
-                    inputOperators.remove(at: updatePointer + 1)
+//                    inputNumbers.remove(at: updatePointer + 2)
+//                    inputNumbers.remove(at: updatePointer + 1)
+//                    inputOperators.remove(at: updatePointer + 2)
+//                    inputOperators.remove(at: updatePointer + 1)
                 case "/":
-                    inputNumbers[updatePointer] = Int(divide(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    do {
+                        try inputNumbers[updatePointer] = Int(divide(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    } catch CustomError.divisionByZero {
+                        print("Error, division by zero")
+                    } catch {
+                        print("Unexpected error: \(error)")
+                    }
+                    removeInputItems(pointer: updatePointer)
+                    //inputNumbers[updatePointer] = Int(divide(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                    inputNumbers.remove(at: updatePointer + 2)
-                    inputNumbers.remove(at: updatePointer + 1)
-                    inputOperators.remove(at: updatePointer + 2)
-                    inputOperators.remove(at: updatePointer + 1)
+//                    inputNumbers.remove(at: updatePointer + 2)
+//                    inputNumbers.remove(at: updatePointer + 1)
+//                    inputOperators.remove(at: updatePointer + 2)
+//                    inputOperators.remove(at: updatePointer + 1)
                 case "%":
                     inputNumbers[updatePointer] = Int(modulo(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                    inputNumbers.remove(at: updatePointer + 2)
-                    inputNumbers.remove(at: updatePointer + 1)
-                    inputOperators.remove(at: updatePointer + 2)
-                    inputOperators.remove(at: updatePointer + 1)
+//                    inputNumbers.remove(at: updatePointer + 2)
+//                    inputNumbers.remove(at: updatePointer + 1)
+//                    inputOperators.remove(at: updatePointer + 2)
+//                    inputOperators.remove(at: updatePointer + 1)
                 default:
                     //print("This is + or -, skipping this step")
                     updatePointer = updatePointer + 2
@@ -170,24 +181,27 @@ class Calculator {
                 switch op{
                 case "+":
                     inputNumbers[updatePointer] = Int(add(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                    inputNumbers.remove(at: updatePointer + 2)
-                    inputNumbers.remove(at: updatePointer + 1)
-                    inputOperators.remove(at: updatePointer + 2)
-                    inputOperators.remove(at: updatePointer + 1)
+//                    inputNumbers.remove(at: updatePointer + 2)
+//                    inputNumbers.remove(at: updatePointer + 1)
+//                    inputOperators.remove(at: updatePointer + 2)
+//                    inputOperators.remove(at: updatePointer + 1)
                 case "-":
                     inputNumbers[updatePointer] = Int(minus(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
+                    removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-                    inputNumbers.remove(at: updatePointer + 2)
-                    inputNumbers.remove(at: updatePointer + 1)
-                    inputOperators.remove(at: updatePointer + 2)
-                    inputOperators.remove(at: updatePointer + 1)
+//                    inputNumbers.remove(at: updatePointer + 2)
+//                    inputNumbers.remove(at: updatePointer + 1)
+//                    inputOperators.remove(at: updatePointer + 2)
+//                    inputOperators.remove(at: updatePointer + 1)
                 default:
                     //print("This is *, % or /, skipping this step")
                     updatePointer = updatePointer + 2
                 }
             default:
-                print("Finalising calculation")// most likely this line would not be printed. this is part of switch precedence loop.
+                //print("Finalising calculation")// most likely this line would not be printed. this is part of switch precedence loop.
+                throw CustomError.invalidInput
             }// end of switch precedence loop/ 
             
             //print(inputNumbers)
@@ -195,62 +209,16 @@ class Calculator {
             //print("After checking, now pointer is reading \(inputNumbers[updatePointer]) at spot \(updatePointer)")
         }// end of else loop
         
-        calculateProcess(pointer: updatePointer, precedence: updatePrecedence)
+        try calculateProcess(pointer: updatePointer, precedence: updatePrecedence)
         return inputNumbers[0]
         
-//
-//        for precedence in stride(from: 3, to: 1, by: -1){
-//            print("At precedence level \(precedence) the result is \(result)")
-//            for index in stride(from: 2, to: args.count, by:2){
-//                let op = args[index - 1]// getting the operator from odd spots
-//                let number = Int(args[index])!// unwarpping stuff
-//
-//                switch precedence{ // determine the calculation level based on this precedence indicator.
-//                case 3:
-//                    switch op{
-//                    case "*":
-//                        result = Int(multiply(no1: result, no2: number))
-////                        inputs.remove(at: index-1)
-////                        inputs.remove(at: index-1)
-//                    case "/":
-//                        result = Int(divide(no1: result, no2: number))
-////                        inputs.remove(at: index-1)
-////                        inputs.remove(at: index-1)
-//                        //print(inputs)
-//                    case "%":
-//                        result = modulo(no1: result, no2: number)
-////                        inputs.remove(at: index-1)
-////                        inputs.remove(at: index-1)
-//                    default:
-//                        print("No precedence 3 calculation detected. ")
-//                        //fatalError() // might need to throw a input string error here
-//                    }
-//                case 2:
-//                    switch op{
-//                    case "+":
-//                        result = add(no1: result, no2: number)
-////                        inputs.remove(at: index-1)
-////                        inputs.remove(at: index-1)
-//                    case "-":
-//                        result = minus(no1: result, no2: number)
-////                        inputs.remove(at: index-1)
-////                        inputs.remove(at: index-1)
-//                    default:
-//                        print("No precedence 2 calculation detected. ")
-//                        //fatalError()
-//                    }
-//                default:
-//                    print("calculation process complete")
-//                }// end of switch precedence loop
-//                //precedence = precedence - 1 // decrease the precedence to get into next step.
-//            }// end of index loop
-//        }// end of for precedence loop
-//
-        
-        //let resultString = String(result);
-        //return(resultString)
-        
-        
-        
+    } // end of calculateProcess(pointer, precedence)
+    
+    func removeInputItems(pointer: Int){
+        inputNumbers.remove(at: pointer + 2)
+        inputNumbers.remove(at: pointer + 1)
+        inputOperators.remove(at: pointer + 2)
+        inputOperators.remove(at: pointer + 1)
     }
+    
 }
