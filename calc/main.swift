@@ -23,12 +23,15 @@ var result: String = ""
 // Calculate the result
 //let result = calculator.add(no1: 1, no2: 1);
 do{
-    result = try calculator.calculate(args: args)
+    //result = try calculator.calculate(args: args)
+    print(try calculator.calculate(args: args))
 } catch CustomError.divisionByZero {
     print("Error in main, division by zero")
+} catch CustomError.invalidInput {
+    print("Error in main, invalid input")
 } catch {
     print("Unexpected error: \(error)")
 }
 //let result = calculator.calculate(args: args)
 
-print(result)
+//print(result)

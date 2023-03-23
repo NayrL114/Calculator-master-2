@@ -146,33 +146,22 @@ class Calculator {
                     inputNumbers[updatePointer] = Int(multiply(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-//                    inputNumbers.remove(at: updatePointer + 2)
-//                    inputNumbers.remove(at: updatePointer + 1)
-//                    inputOperators.remove(at: updatePointer + 2)
-//                    inputOperators.remove(at: updatePointer + 1)
                 case "/":
-                    do {
+                    do {// This block might throw divisionbyZero error, so a do-try-catch is warpped around this part
                         try inputNumbers[updatePointer] = Int(divide(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     } catch CustomError.divisionByZero {
-                        print("Error, division by zero")
+                        //print("Error, division by zero")
+                        throw CustomError.divisionByZero
                     } catch {
                         print("Unexpected error: \(error)")
                     }
                     removeInputItems(pointer: updatePointer)
                     //inputNumbers[updatePointer] = Int(divide(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-//                    inputNumbers.remove(at: updatePointer + 2)
-//                    inputNumbers.remove(at: updatePointer + 1)
-//                    inputOperators.remove(at: updatePointer + 2)
-//                    inputOperators.remove(at: updatePointer + 1)
                 case "%":
                     inputNumbers[updatePointer] = Int(modulo(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-//                    inputNumbers.remove(at: updatePointer + 2)
-//                    inputNumbers.remove(at: updatePointer + 1)
-//                    inputOperators.remove(at: updatePointer + 2)
-//                    inputOperators.remove(at: updatePointer + 1)
                 default:
                     //print("This is + or -, skipping this step")
                     updatePointer = updatePointer + 2
@@ -183,18 +172,10 @@ class Calculator {
                     inputNumbers[updatePointer] = Int(add(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-//                    inputNumbers.remove(at: updatePointer + 2)
-//                    inputNumbers.remove(at: updatePointer + 1)
-//                    inputOperators.remove(at: updatePointer + 2)
-//                    inputOperators.remove(at: updatePointer + 1)
                 case "-":
                     inputNumbers[updatePointer] = Int(minus(no1: inputNumbers[updatePointer], no2: inputNumbers[updatePointer + 2]))
                     removeInputItems(pointer: updatePointer)
                     //print("updating spot \(updatePointer) with number \(inputNumbers[updatePointer])")
-//                    inputNumbers.remove(at: updatePointer + 2)
-//                    inputNumbers.remove(at: updatePointer + 1)
-//                    inputOperators.remove(at: updatePointer + 2)
-//                    inputOperators.remove(at: updatePointer + 1)
                 default:
                     //print("This is *, % or /, skipping this step")
                     updatePointer = updatePointer + 2
@@ -214,6 +195,7 @@ class Calculator {
         
     } // end of calculateProcess(pointer, precedence)
     
+    // Little helper function for removing elemenets in input arrays
     func removeInputItems(pointer: Int){
         inputNumbers.remove(at: pointer + 2)
         inputNumbers.remove(at: pointer + 1)
