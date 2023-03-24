@@ -8,33 +8,30 @@
 
 import Foundation
 
+enum CustomErrorCode: Int32 {
+    case INVALID_INPUT = 1
+    case DIVISION_BY_ZERO
+    case UNEXPECTED_ERROR = 404
+}
+
+// This code already exist in the provided scaffold code, getting inputs from argument inputs
 var args = ProcessInfo.processInfo.arguments
 args.removeFirst() // remove the name of the program
-
-// Retrieve User Input
-//let no1 = args[0]; // Sample Code Only! Update Required!
-//let operator = args[1]; // Sample Code Only! Update Required!
-//let no2 = args[1]; // Sample Code Only! Update Required!
 
 // Initialize a Calculator object
 let calculator = Calculator();
 var result: String = ""
 
 // Calculate the result
-//let result = calculator.add(no1: 1, no2: 1);
-do{
-    //result = try calculator.calculate(args: args)
+do{ // As the calculator.calculate() will not throw error, a do-try-catch statement is warpped around.
     print(try calculator.calculate(args: args))
 } catch CustomError.divisionByZero {
     print("Error in main, division by zero")
-    exit(1)
+    exit(CustomErrorCode.DIVISION_BY_ZERO.rawValue)
 } catch CustomError.invalidInput {
     print("Error in main, invalid input")
-    exit(2)
+    exit(CustomErrorCode.INVALID_INPUT.rawValue)
 } catch {
     print("Unexpected error: \(error)")
-    exit(404)
+    exit(CustomErrorCode.UNEXPECTED_ERROR.rawValue)
 }
-//let result = calculator.calculate(args: args)
-
-//print(result)
