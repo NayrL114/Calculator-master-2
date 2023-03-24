@@ -27,10 +27,13 @@ do{
     print(try calculator.calculate(args: args))
 } catch CustomError.divisionByZero {
     print("Error in main, division by zero")
+    exit(1)
 } catch CustomError.invalidInput {
     print("Error in main, invalid input")
+    exit(2)
 } catch {
     print("Unexpected error: \(error)")
+    exit(404)
 }
 //let result = calculator.calculate(args: args)
 

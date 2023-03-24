@@ -72,7 +72,7 @@ class Calculator {
         
         // This function will process the input to get ready for calculationProcess running.
         
-        guard (args.count >= 3) else{
+        guard (args.count >= 3 && (args.count % 2) != 0) else{
             //return("error, input is not long enough")
 //            do{
 //                return String(Int(args[0])!)// Parse the integer of single input back to the tester
